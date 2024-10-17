@@ -1,0 +1,79 @@
+1)hadoop
+cd /usr/local/hadoop/sbin
+./start-all.sh
+jps
+
+ cd /usr/local/hadoop/bin/
+ hdfs dfs -ls /
+
+hdfs dfs -mkdir /gproject
+
+
+cd /mnt/c/Users/Abdo/Desktop/Graduation_project
+cd BigData/
+ls -alh
+gzip -c bigdatafile.json > bigdatafile.json.gz # big data 
+find $(pwd) -name bigdatafile.json.gz #/mnt/c/Users/Abdo/Desktop/Graduation_project/BigData/bigdatafile.json.gz
+
+ hdfs dfs -put /mnt/c/Users/Abdo/Desktop/Graduation_project/BigData/bigdatafile.json.gz /gproject
+
+  hdfs dfs -ls /gproject
+  hdfs dfs -text  /gproject/bigdatafile.json.gz | head -n 5 
+  hdfs dfs -text /gproject/bigdatafile.json.gz | hdfs dfs -put - /gproject/bigdatafile.json
+
+
+cd
+ touch reducergrad.py
+  touch mappergrad.py
+  chmod 777 mappergrad.py
+   chmod 777 reducergrad.py # write code
+
+
+#task 1 on mapreduce  
+ Branch Performance Analysis
+Mapper: Emit branch names and their total sales from each transaction.
+Reducer: Sum the sales per branch to get an overall performance analysis
+
+here hadoop streaming 
+find $(pwd) -name mappergrad.py  #/home/hduser/mappergrad.py
+find $(pwd) -name reducergrad.py #/home/hduser/reducergrad.py
+
+ hadoop jar /usr/local/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar \
+    -input /gproject/bigdatafile.json \
+    -output /gproject/output1 \
+    -file /home/hduser/mapreducerstask/mappergrad1.py -mapper /home/hduser/mapreducerstask/mappergrad1.py \
+    -file /home/hduser/mapreducerstask/reducergrad1.py -reducer /home/hduser/mapreducerstask/reducergrad1.py 
+
+
+# task 2 at mapreduce
+Find the top products that generate the highest total sales (revenue).
+
+    hadoop jar /usr/local/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar \
+    -input /gproject/bigdatafile.json \
+    -output /gproject/output2 \
+    -file /home/hduser/mapreducerstask/mappergrad2.py -mapper /home/hduser/mapreducerstask/mappergrad2.py \
+    -file /home/hduser/mapreducerstask/reducergrad2.py -reducer /home/hduser/mapreducerstask/reducergrad2.py 
+   # top 3 
+   hadoop jar /usr/local/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar \
+    -input /gproject/bigdatafile.json \
+    -output /gproject/outputtop2 \
+    -file /home/hduser/mapreducerstask/mappergrad2.py -mapper /home/hduser/mapreducerstask/mappergrad2.py \
+    -file /home/hduser/mapreducerstask/reducergradt2.py -reducer /home/hduser/mapreducerstask/reducergradt2.py 
+------------------------------------------------------------
+# task 3 
+Monthly Sales Trends
+Goal: Analyze the total sales for each month.
+
+
+     hadoop jar /usr/local/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar \
+    -input /gproject/bigdatafile.json \
+    -output /gproject/output3 \
+    -file /home/hduser/mapreducerstask/mappergrad3.py -mapper /home/hduser/mapreducerstask/mappergrad3.py \
+    -file /home/hduser/mapreducerstask/reducergrad3.py -reducer /home/hduser/mapreducerstask/reducergrad3.py 
+
+record['InvoiceDate']:
+ In your JSON data, InvoiceDate is a timestamp in milliseconds (representing the number of milliseconds since January 1, 1970, known as the Unix epoch).
+  date = datetime.utcfromtimestamp(timestamp)
+  Purpose: This line converts the timestamp in seconds into a datetime object.
+   Using utcfromtimestamp() ensures that the date and time are represented in Coordinated Universal Time (UTC). 
+   This is useful for standardizing date and time data, especially if the data comes from different time zones.
